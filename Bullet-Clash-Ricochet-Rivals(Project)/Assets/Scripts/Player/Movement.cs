@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    private const int walkSpeed = 5;
+    private const int walkSpeed = 4;
     private const int maxVelocityChange = 10;
 
     private Vector2 input;
     private Rigidbody rb;
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
+    private void Awake() => rb = GetComponent<Rigidbody>();
 
-    public void Move() => rb.AddForce(CalculateMovement(walkSpeed), ForceMode.VelocityChange);
+    public void Move()
+    {
+        Vector3 targetVelocity = CalculateMovement(walkSpeed);
+        ApplyVelocityChange(targetVelocity);
+    }
 
     public void GetInput()
     {
@@ -25,9 +26,12 @@ public class Movement : MonoBehaviour
     {
         Vector3 targetVelocity = new Vector3(input.x, 0, input.y);
         targetVelocity = transform.TransformDirection(targetVelocity);
-
         targetVelocity *= speed;
+        return targetVelocity;
+    }
 
+    private void ApplyVelocityChange(Vector3 targetVelocity)
+    {
         Vector3 velocity = rb.velocity;
 
         if (input.magnitude > 0.5f)
@@ -35,13 +39,18 @@ public class Movement : MonoBehaviour
             Vector3 velocityChange = targetVelocity - velocity;
             velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
             velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-
             velocityChange.y = 0;
 
-            return velocityChange;
+            rb.AddForce(velocityChange, ForceMode.VelocityChange);
         }
-
         else
-            return new Vector3();
+        {
+            Vector3 counterVelocity = -velocity;
+            counterVelocity.x = Mathf.Clamp(counterVelocity.x, -maxVelocityChange, maxVelocityChange);
+            counterVelocity.z = Mathf.Clamp(counterVelocity.z, -maxVelocityChange, maxVelocityChange);
+            counterVelocity.y = 0;
+
+            rb.AddForce(counterVelocity, ForceMode.VelocityChange);
+        }
     }
 }

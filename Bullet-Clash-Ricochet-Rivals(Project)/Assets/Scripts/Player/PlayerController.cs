@@ -17,16 +17,11 @@ public class PlayerController : MonoBehaviour
         GetFireInput();
     }
 
-    private void FixedUpdate()
-    {
-        movement.Move();
-    }
+    private void FixedUpdate() => movement.Move();
 
     private void GetFireInput()
     {
         if (Input.GetButtonDown("Fire1"))
-        {
             weapon.Fire();
-        }
     }
 }

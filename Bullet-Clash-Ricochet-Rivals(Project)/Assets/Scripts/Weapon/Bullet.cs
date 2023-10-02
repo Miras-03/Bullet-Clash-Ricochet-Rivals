@@ -1,5 +1,5 @@
+using Photon.Pun;
 using UnityEngine;
-using Zenject;
 
 public class Bullet : MonoBehaviour
 {
@@ -7,31 +7,31 @@ public class Bullet : MonoBehaviour
     [SerializeField] private GameObject explosionPrefab;
 
     private const int speed = 10;
-    private const int damageAmount = 25;
-    private const string PlayerBullet = nameof(PlayerBullet);
+
+    private const string PlayerBullet = "Bullet";
     private const string Player = nameof(Player);
+    private const string TakeDamage = nameof(TakeDamage);
 
-    private void FixedUpdate()
-    {
-        MoveBullet();
-    }
+    private void FixedUpdate() => MoveBullet();
 
-    private void MoveBullet()
-    {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    }
+    private void MoveBullet() => transform.Translate(Vector3.forward * speed * Time.fixedDeltaTime);
 
     private void OnCollisionEnter(Collision collision)
     {
         GameObject collisionOfObject = collision.gameObject;
 
-        if (collisionOfObject.CompareTag(PlayerBullet))
+        if (collision.gameObject.CompareTag(Player))
         {
-            //Explode();
+            PhotonView targetPhotonView = collisionOfObject.GetComponent<PhotonView>();
+            if (!targetPhotonView.IsMine)
+                targetPhotonView.RPC(TakeDamage, RpcTarget.Others);
         }
+        else if (collisionOfObject.CompareTag(PlayerBullet))
+            Explode();
         else if ((reflectionLayers.value & 1 << collision.gameObject.layer) != 0)
             ReflectBullet(collision.contacts[0].normal);
     }
+
 
     private void ReflectBullet(Vector3 reflectionNormal)
     {
@@ -41,7 +41,7 @@ public class Bullet : MonoBehaviour
 
     private void Explode()
     {
-        //Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }

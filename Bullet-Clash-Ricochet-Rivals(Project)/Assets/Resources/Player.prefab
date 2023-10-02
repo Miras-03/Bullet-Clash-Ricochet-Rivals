@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76c45633d511c748941859cf18c15e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 8894224416765901360, guid: e8664e7e35dd1d64c98e55c7597f8004,
+  bulletPrefab: {fileID: 5544615551740244245, guid: 1fb88933783486d42aa1a069903dd885,
     type: 3}
   firePoint: {fileID: 5608179097538750122}
 --- !u!1 &7826084566507684891
@@ -289,8 +289,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7826084566507684891}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.35, y: -0.29999995, z: 1.3800001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.35, y: -0.29999995, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

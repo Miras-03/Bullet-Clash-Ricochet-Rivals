@@ -29,15 +29,15 @@ public class Health
     public void RemoveDieableObservers() => dieableObservers.Clear();
     public void RemoveHealthObservers() => healthObservers.Clear();
 
-    public void NotifyObserversAboutChange()
-    {
-        foreach (IHealthObserver observer in healthObservers)
-            observer.OnHealthChanged(health);
-    }
-
     public void NotifyObserversAboutDeath()
     {
         foreach (IDieable observer in dieableObservers)
             observer.PerformMurder();
+    }
+
+    public void NotifyObserversAboutChange()
+    {
+        foreach (IHealthObserver observer in healthObservers)
+            observer.OnHealthChanged(health);
     }
 }
