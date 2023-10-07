@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private LayerMask reflectionLayers;
     [SerializeField] private GameObject explosionPrefab;
 
-    private const int speed = 10;
+    private const int speed = 20;
 
     private const string PlayerBullet = "Bullet";
     private const string Player = nameof(Player);
@@ -18,20 +18,31 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        GameObject collisionOfObject = collision.gameObject;
+        GameObject collisionObject = collision.gameObject;
 
-        if (collision.gameObject.CompareTag(Player))
+        if (collisionObject.CompareTag(Player))
         {
-            PhotonView targetPhotonView = collisionOfObject.GetComponent<PhotonView>();
-            if (!targetPhotonView.IsMine)
-                targetPhotonView.RPC(TakeDamage, RpcTarget.Others);
+            Explode();
+            ApplyDamage(collisionObject);
         }
-        else if (collisionOfObject.CompareTag(PlayerBullet))
+        else if (collisionObject.CompareTag(PlayerBullet))
             Explode();
         else if ((reflectionLayers.value & 1 << collision.gameObject.layer) != 0)
             ReflectBullet(collision.contacts[0].normal);
     }
 
+    private void ApplyDamage(GameObject playerObject)
+    {
+        PhotonView targetPhotonView = playerObject.GetComponent<PhotonView>();
+
+        if (targetPhotonView.IsMine)
+        {
+            PlayerHealth playerHealth = playerObject.GetComponent<PlayerHealth>();
+            playerHealth.TakeDamage();
+        }
+        else
+            targetPhotonView.RPC(TakeDamage, targetPhotonView.Owner);
+    }
 
     private void ReflectBullet(Vector3 reflectionNormal)
     {
