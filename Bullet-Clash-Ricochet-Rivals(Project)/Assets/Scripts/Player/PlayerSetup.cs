@@ -2,7 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
-public class PlayerSetup : MonoBehaviour
+public class PlayerSetup : MonoBehaviour, IRoomObserver
 {
     [Header("PlayerBelong")]
     [SerializeField] private PlayerController playerController;
@@ -13,8 +13,6 @@ public class PlayerSetup : MonoBehaviour
     [SerializeField] private GameObject nameTag; 
     [SerializeField] private TextMeshPro nicknameText;
     private string nickname;
-
-    private void Awake() => RoomManager.OnRoomJoined += EnableNicknameFace;
 
     public void IsLocalPlayer()
     {
@@ -29,5 +27,5 @@ public class PlayerSetup : MonoBehaviour
         nicknameText.text = nickname;
     }
 
-    private void EnableNicknameFace() => nameTag.SetActive(true);
+    public void Execute() => nameTag.SetActive(true);
 }

@@ -1,22 +1,31 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DisplayAmmo : MonoBehaviour
 {
+    private Image ammoCircle;
+
     private TextMeshProUGUI ammoText;
     private TextMeshProUGUI magText;
 
     private void Awake()
     {
-        TextMeshProUGUIManager textManager = TextMeshProUGUIManager.Instance;
+        ammoCircle = UIAmmoSingleton.Instance.uiImage;
 
-        if (textManager != null)
-        {
-            ammoText = textManager.ammoText;
-            magText = textManager.magText;
-        }
-        else
-            Debug.LogError("TextMeshProUGUIManager not found. Make sure it is in the scene.");
+        ammoText = TextMeshProUGUISingleton.Instance.ammoText;
+        magText = TextMeshProUGUISingleton.Instance.magText;
+    }
+
+    public void SetMaxAmmo(float ammoCount)
+    {
+        ammoCircle.fillAmount = ammoCount;
+    }
+
+    public void SetAmmo(float ammoCount, int maxAmmoCount)
+    {
+        float fillAmount = ammoCount / maxAmmoCount;
+        ammoCircle.fillAmount = fillAmount;
     }
 
     public void ReloadAmmoIndicator(int magCount, int ammoCount, int ammoMaxCount)

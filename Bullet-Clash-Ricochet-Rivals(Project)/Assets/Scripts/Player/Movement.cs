@@ -3,16 +3,29 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     private const int walkSpeed = 4;
+    private const int sprintSpeed = 8;
     private const int maxVelocityChange = 10;
+
+    private const int jumpHeight = 5;
 
     private Vector2 input;
     private Rigidbody rb;
+
+    private bool sprinting;
+    private bool jumping;
+    private bool grounded = true;
 
     private void Awake() => rb = GetComponent<Rigidbody>();
 
     public void Move()
     {
-        Vector3 targetVelocity = CalculateMovement(walkSpeed);
+        if (jumping && grounded)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, jumpHeight, rb.velocity.z);
+            grounded = false;
+        }
+
+        Vector3 targetVelocity = CalculateMovement(sprinting ? sprintSpeed : walkSpeed);
         ApplyVelocityChange(targetVelocity);
     }
 
@@ -20,13 +33,24 @@ public class Movement : MonoBehaviour
     {
         input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         input.Normalize();
+
+        sprinting = Input.GetButton("Sprint");
+        jumping = Input.GetButton("Jump");
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Floor"))
+            grounded = true;
     }
 
     private Vector3 CalculateMovement(float speed)
     {
         Vector3 targetVelocity = new Vector3(input.x, 0, input.y);
+
         targetVelocity = transform.TransformDirection(targetVelocity);
         targetVelocity *= speed;
+
         return targetVelocity;
     }
 

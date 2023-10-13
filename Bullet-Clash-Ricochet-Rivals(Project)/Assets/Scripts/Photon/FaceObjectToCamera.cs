@@ -11,7 +11,7 @@ public class FaceObjectToCamera : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.01f); 
-            transform.LookAt(Camera.main.transform);
+            transform.LookAt(Camera.main.transform); 
         }
     }
 }

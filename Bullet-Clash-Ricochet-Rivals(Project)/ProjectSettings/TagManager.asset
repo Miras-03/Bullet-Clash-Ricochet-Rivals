@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerBullet
   - Bullet
+  - Floor
   layers:
   - Default
   - TransparentFX

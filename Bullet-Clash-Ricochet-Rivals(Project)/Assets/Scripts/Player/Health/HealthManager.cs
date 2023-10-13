@@ -1,18 +1,14 @@
 using UnityEngine;
 using Zenject;
 
-public class HealthManager : MonoBehaviour
+public class HealthManager : MonoBehaviour, IRoomObserver
 {
     private Health health;
     private PlayerHealth playerHealth;
     [SerializeField] private HealthBar healthBar;
 
     [Inject]
-    public void Construct(Health health)
-    {
-        this.health = health;
-        RoomManager.OnRoomJoined += GetReferenceOfObservers;
-    }
+    public void Construct(Health health) => this.health = health;
 
     public void TakeDamage(int damageAmount) => health.TakeDamage -= damageAmount;
     public void SetMaxHealthValue(int value) => health.TakeDamage = value;

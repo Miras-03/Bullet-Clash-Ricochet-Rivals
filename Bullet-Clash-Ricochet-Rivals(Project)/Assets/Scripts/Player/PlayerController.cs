@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         if (canFire && Input.GetButton("Fire1") && !weapon.isReloading)
         {
-            weapon.Fire();
+            weapon.FireAsync();
             canFire = false;
             fireCoolDown = 0.1f;
         }

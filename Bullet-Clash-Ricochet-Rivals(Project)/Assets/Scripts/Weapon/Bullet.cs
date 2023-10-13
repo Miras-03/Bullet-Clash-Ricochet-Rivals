@@ -54,5 +54,6 @@ public class Bullet : MonoBehaviour
     {
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
+        AudioSounder.SoundAudio(SoundSingleton.Instance.GetExplosion);
     }
 }

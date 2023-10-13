@@ -1,51 +1,72 @@
 using Photon.Pun;
+using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
     private DisplayAmmo displayAmmo;
+    [SerializeField] private CameraShake cameraShake;
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
 
     [SerializeField] private Animator animator;
 
+    [Header("AudioSource")]
+    private AudioSource gunShot;
+
     [Header("Ammo")]
-    [SerializeField] private int ammo = 27;
-    [SerializeField] private int mag = 5;
+    private int ammo = 27;
+    private int mag = 1;
     private int spareAmmo = 27;
     private const int maxAmmoCount = 27;
+
+    [Header("Shake")]
+    private const float magnitude = 0.2f;
+    private const float shakeDuration = 0.2f;
 
     private const int speed = 15;
     private const string Bullet = nameof(Bullet);
 
     [HideInInspector] public bool isReloading = false;
+    private bool isCanceled = false;
 
     private void Awake() => displayAmmo = GetComponent<DisplayAmmo>();
 
     private void Start()
     {
         spareAmmo = ammo;
+        displayAmmo.SetAmmo(ammo, maxAmmoCount);
         displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
     }
 
-    public void Fire()
+    public async void FireAsync()
     {
         if (ammo > 0)
         {
-            ammo--;
+            AudioSounder.SoundAudio(SoundSingleton.Instance.GetGunSound);
 
+            ammo--;
+            displayAmmo.SetAmmo(ammo, maxAmmoCount);
             displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
 
             GameObject bullet = PhotonNetwork.Instantiate(Bullet, firePoint.position, firePoint.rotation);
             Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
             bulletRb.velocity = bullet.transform.forward * speed;
 
-            StartCoroutine(WaitForDestroy(bullet));
+            if (!isCanceled)
+                await cameraShake.Shake(shakeDuration, magnitude);
+            StartCoroutine(DestroyBullet(bullet));
         }
         else
-            Reload();
+        {
+            AudioSounder.SoundAudio(SoundSingleton.Instance.GetLuckSound);
+            if (mag>=0)
+                Reload();
+            else
+                isCanceled = !isCanceled;
+        }
     }
 
     public void Reload()
@@ -84,17 +105,20 @@ public class Weapon : MonoBehaviour
 
     private void TurnReloading(bool state) => isReloading = state;
 
-    private IEnumerator WaitForDestroy(GameObject bullet)
+    private IEnumerator DestroyBullet(GameObject bullet)
     {
         yield return new WaitForSeconds(3f);
-        if (bullet != null) 
+        
+        if (bullet != null)
             PhotonNetwork.Destroy(bullet);
     }
+
     private IEnumerator WaitForReload()
     {
         yield return new WaitForSeconds(3f);
 
         ReloadAmmo();
+        displayAmmo.SetAmmo(ammo, maxAmmoCount);
         displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
         TurnReloading(false);
     }
