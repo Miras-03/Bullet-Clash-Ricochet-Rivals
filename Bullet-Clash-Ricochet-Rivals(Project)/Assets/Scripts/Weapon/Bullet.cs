@@ -3,10 +3,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [Header("Layers")]
     [SerializeField] private LayerMask reflectionLayers;
+
+    [Space(20)]
+    [Header("GameObjects")]
     [SerializeField] private GameObject explosionPrefab;
 
-    private const int speed = 20;
+    private const int speed = 30;
 
     private const string PlayerBullet = "Bullet";
     private const string Player = nameof(Player);

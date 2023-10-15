@@ -1,47 +1,33 @@
 using Photon.Pun;
-using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class MachineGun : Weapon
 {
-    private DisplayAmmo displayAmmo;
-    [SerializeField] private CameraShake cameraShake;
-
+    [Header("BulletBelong")]
     [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Rigidbody bulletRB;
     [SerializeField] private Transform firePoint;
 
+    [Space(20)]
+    [Header("Animator")]
     [SerializeField] private Animator animator;
-
-    [Header("AudioSource")]
-    private AudioSource gunShot;
-
-    [Header("Ammo")]
-    private int ammo = 27;
-    private int mag = 1;
-    private int spareAmmo = 27;
-    private const int maxAmmoCount = 27;
-
-    [Header("Shake")]
-    private const float magnitude = 0.2f;
-    private const float shakeDuration = 0.2f;
-
-    private const int speed = 15;
-    private const string Bullet = nameof(Bullet);
-
-    [HideInInspector] public bool isReloading = false;
-    private bool isCanceled = false;
-
-    private void Awake() => displayAmmo = GetComponent<DisplayAmmo>();
 
     private void Start()
     {
+        ammo = 27;
+        mag = 3;
+        spareAmmo = 27;
+        maxAmmoCount = 27;
+
+        shootSpeed = 20;
+
         spareAmmo = ammo;
         displayAmmo.SetAmmo(ammo, maxAmmoCount);
         displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
     }
 
-    public async void FireAsync()
+    public override async void FireAsync()
     {
         if (ammo > 0)
         {
@@ -52,8 +38,7 @@ public class Weapon : MonoBehaviour
             displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
 
             GameObject bullet = PhotonNetwork.Instantiate(Bullet, firePoint.position, firePoint.rotation);
-            Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-            bulletRb.velocity = bullet.transform.forward * speed;
+            bulletRB.velocity = bullet.transform.forward * shootSpeed;
 
             if (!isCanceled)
                 await cameraShake.Shake(shakeDuration, magnitude);
@@ -62,14 +47,14 @@ public class Weapon : MonoBehaviour
         else
         {
             AudioSounder.SoundAudio(SoundSingleton.Instance.GetLuckSound);
-            if (mag>=0)
+            if (mag >= 0)
                 Reload();
             else
                 isCanceled = !isCanceled;
         }
     }
 
-    public void Reload()
+    public override void Reload()
     {
         bool shouldReload = (spareAmmo > 0 || mag > 0) && (ammo != spareAmmo || ammo == 0);
 
@@ -81,7 +66,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    private void ReloadAmmo()
+    protected override void ReloadAmmo()
     {
         int ammoNeededToMaxMag = maxAmmoCount - ammo;
 
@@ -103,17 +88,17 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    private void TurnReloading(bool state) => isReloading = state;
+    protected override void TurnReloading(bool state) => isReloading = state;
 
-    private IEnumerator DestroyBullet(GameObject bullet)
+    protected override IEnumerator DestroyBullet(GameObject bullet)
     {
         yield return new WaitForSeconds(3f);
-        
+
         if (bullet != null)
             PhotonNetwork.Destroy(bullet);
     }
 
-    private IEnumerator WaitForReload()
+    protected override IEnumerator WaitForReload()
     {
         yield return new WaitForSeconds(3f);
 

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 public class CameraShake : MonoBehaviour
 {
+    private Transform localTransform;
+
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Transform weaponTransform;
 
@@ -15,6 +17,7 @@ public class CameraShake : MonoBehaviour
 
     private void Start()
     {
+        localTransform = transform;
         cameraYPosition = transform.position.y;
         weaponYPosition = weaponTransform.position.y;
     }
@@ -34,7 +37,7 @@ public class CameraShake : MonoBehaviour
 
             Vector3 cameraShakeOffset = new Vector3(camShake, 0, camShake);
 
-            transform.position = originalPositionForCamera + cameraShakeOffset;
+            localTransform.position = originalPositionForCamera + cameraShakeOffset;
 
             elapsed += Time.deltaTime;
             await Task.Yield();
@@ -43,7 +46,7 @@ public class CameraShake : MonoBehaviour
         originalPositionForCamera = new Vector3(playerTransform.position.x, cameraYPosition, playerTransform.position.z);
         originalPositionForWeapon = new Vector3(xPositionOfWeapon, weaponYPosition, weaponTransform.position.z);
 
-        transform.position = originalPositionForCamera;
+        localTransform.position = originalPositionForCamera;
         weaponTransform.position = originalPositionForWeapon;
     }
 }

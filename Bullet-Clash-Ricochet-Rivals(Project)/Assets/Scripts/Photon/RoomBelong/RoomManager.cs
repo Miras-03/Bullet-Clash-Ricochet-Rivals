@@ -28,7 +28,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
-        //SelectSpawnPoint();
+        SelectSpawnPoint();
         InstantiatePlayer();
     }
 
