@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 public class WeaponSwitcher : MonoBehaviour
 {
+    [Header("OtherScripts")]
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private DisplayAmmo displayAmmo;
 
     [Space(20)]
     [Header("WeaponGameObjects")]
@@ -19,12 +21,30 @@ public class WeaponSwitcher : MonoBehaviour
     [PunRPC]
     public void SwitchWeaponGameObject()
     {
-        foreach (GameObject weaponGameObject in weaponGameObjects)
-            weaponGameObject.SetActive(false);
+        SetOffCurrentProcess();
+        SetNewWeapon();
+        UpdateUIIndicators();
+    }
 
+    private void SetOffCurrentProcess()
+    {
+        weaponGameObjects[currentWeaponIndex].SetActive(false);
+        //weapons[currentWeaponIndex].TurnReloading(false);
+        //weapons[currentWeaponIndex].StopReloadCoroutine();
+    }
+
+    private void SetNewWeapon()
+    {
         currentWeaponIndex = (currentWeaponIndex + 1) % weaponGameObjects.Count;
-        weaponGameObjects[currentWeaponIndex].SetActive(true);
 
+        weaponGameObjects[currentWeaponIndex].SetActive(true);
         playerController.SetWeapon(weapons[currentWeaponIndex]);
+        weapons[currentWeaponIndex].ResetAnimator();
+    }
+
+    private void UpdateUIIndicators()
+    {
+        weapons[currentWeaponIndex].SetUIOfAmmo();
+        weapons[currentWeaponIndex].ReloadAmmoIndicator();
     }
 }

@@ -17,11 +17,6 @@ public class DisplayAmmo : MonoBehaviour
         magText = TextMeshProUGUISingleton.Instance.magText;
     }
 
-    public void SetMaxAmmo(float ammoCount)
-    {
-        ammoCircle.fillAmount = ammoCount;
-    }
-
     public void SetAmmo(float ammoCount, int maxAmmoCount)
     {
         float fillAmount = ammoCount / maxAmmoCount;

@@ -18,6 +18,7 @@ public class PlayerSetup : MonoBehaviour, IRoomObserver
     {
         playerController.enabled = true;
         playerCamera.SetActive(true);
+        GetComponent<Renderer>().enabled = false;
     }
 
     [PunRPC]

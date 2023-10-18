@@ -1,12 +1,13 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
-    [Header("RoomBelong")]
+    public static event Action OnRoomConnected;
+
     private Room room;
-    [SerializeField] private RoomObserverController roomController;
 
     [Space(20)]
     [Header("PlayerProperties")]
@@ -47,8 +48,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         randomPoint = playerCount == 1
-            ? Random.Range(0, 2)
-            : Random.Range(3, 6);
+            ? UnityEngine.Random.Range(0, 2)
+            : UnityEngine.Random.Range(3, 6);
     }
 
     private void EnablePrefab(GameObject prefab) => prefab.GetComponent<PlayerSetup>().IsLocalPlayer();
@@ -63,6 +64,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         foreach (GameObject item in roomEnvironment)
             item.SetActive(false);
 
-        roomController.GetObservers();
+        OnRoomConnected.Invoke();
     }
 }

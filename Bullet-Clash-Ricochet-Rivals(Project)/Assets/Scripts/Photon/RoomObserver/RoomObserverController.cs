@@ -9,9 +9,12 @@ public class RoomObserverController : MonoBehaviour
     private PlayerSetup playerSetup;
     [SerializeField] private HealthManager healthManager;
     [SerializeField] private UIRoomObservers uiRoomObservers;
-    
+
     [Inject]
     public void Construct(Room room) => this.room = room;
+
+    private void OnEnable() => RoomManager.OnRoomConnected += GetObservers;
+    private void OnDestroy() => RoomManager.OnRoomConnected -= GetObservers;
 
     public void AddObservers()
     {
@@ -22,7 +25,7 @@ public class RoomObserverController : MonoBehaviour
 
     private void OnDisable() => room.RemoveObservers();
 
-    public void GetObservers()
+    private void GetObservers()
     {
         playerSetup = FindObjectOfType<PlayerSetup>();
 

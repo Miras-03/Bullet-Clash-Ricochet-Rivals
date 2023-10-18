@@ -13,6 +13,8 @@ public class MachineGun : Weapon
     [Header("Animator")]
     [SerializeField] private Animator animator;
 
+    private int destroyTime = 3;
+
     private void Start()
     {
         ammo = 27;
@@ -23,8 +25,8 @@ public class MachineGun : Weapon
         shootSpeed = 20;
 
         spareAmmo = ammo;
-        displayAmmo.SetAmmo(ammo, maxAmmoCount);
-        displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
+        SetUIOfAmmo();
+        ReloadAmmoIndicator();
     }
 
     public override async void FireAsync()
@@ -34,15 +36,15 @@ public class MachineGun : Weapon
             AudioSounder.SoundAudio(SoundSingleton.Instance.GetGunSound);
 
             ammo--;
-            displayAmmo.SetAmmo(ammo, maxAmmoCount);
-            displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
+            SetUIOfAmmo();
+            ReloadAmmoIndicator();
 
             GameObject bullet = PhotonNetwork.Instantiate(Bullet, firePoint.position, firePoint.rotation);
             bulletRB.velocity = bullet.transform.forward * shootSpeed;
 
             if (!isCanceled)
                 await cameraShake.Shake(shakeDuration, magnitude);
-            StartCoroutine(DestroyBullet(bullet));
+            bulletDestroy.DestroyBullet(bullet, destroyTime);
         }
         else
         {
@@ -61,10 +63,12 @@ public class MachineGun : Weapon
         if (shouldReload)
         {
             TurnReloading(true);
-            animator.SetTrigger("Reload");
-            StartCoroutine(WaitForReload());
+            animator.SetTrigger(ReloadGun);
+            reloadCoroutine = StartCoroutine(WaitForReload());
         }
     }
+
+    public override void TurnReloading(bool state) => isReloading = state;
 
     protected override void ReloadAmmo()
     {
@@ -88,23 +92,29 @@ public class MachineGun : Weapon
         }
     }
 
-    protected override void TurnReloading(bool state) => isReloading = state;
+    public override void SetUIOfAmmo() => displayAmmo.SetAmmo(ammo, maxAmmoCount);
+    public override void ReloadAmmoIndicator() => displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
 
-    protected override IEnumerator DestroyBullet(GameObject bullet)
+    public override void StopReloadCoroutine()
     {
-        yield return new WaitForSeconds(3f);
-
-        if (bullet != null)
-            PhotonNetwork.Destroy(bullet);
+        if (reloadCoroutine != null)
+            StopCoroutine(reloadCoroutine);
     }
 
-    protected override IEnumerator WaitForReload()
+    public override void ResetAnimator()
+    {
+        //TurnReloading(true);
+        animator.Rebind();
+        animator.Update(0f);
+    }
+
+    public override IEnumerator WaitForReload()
     {
         yield return new WaitForSeconds(3f);
 
         ReloadAmmo();
-        displayAmmo.SetAmmo(ammo, maxAmmoCount);
-        displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
+        SetUIOfAmmo();
+        ReloadAmmoIndicator();
         TurnReloading(false);
     }
 }

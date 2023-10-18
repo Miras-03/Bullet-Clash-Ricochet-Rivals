@@ -26,7 +26,7 @@ public class PlayerNickname : MonoBehaviour
             joinRoomButton.interactable = false;
     }
 
-    public void SetNickname(GameObject prefab) => prefab.GetComponent<PhotonView>().RPC("SetNickname", RpcTarget.AllBuffered, nickname);
+    public void SetNickname(GameObject prefab) => prefab.GetComponent<PhotonView>().RPC(nameof(SetNickname), RpcTarget.AllBuffered, nickname);
 
     public void JoinRoomButtonPressed()
     {
@@ -38,6 +38,7 @@ public class PlayerNickname : MonoBehaviour
     {
         gameObject.SetActive(false);
         nameScreen.SetActive(false);
+
         foreach (GameObject connectingGameObject in connectingGameObjects) 
             connectingGameObject.SetActive(true);
     }
