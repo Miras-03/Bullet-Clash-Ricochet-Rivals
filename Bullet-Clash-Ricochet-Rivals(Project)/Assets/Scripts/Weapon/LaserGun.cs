@@ -2,7 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
-public class Gun : Weapon
+public class LaserGun : Weapon
 {
     [Header("WeaponDates")]
     [SerializeField] private WeaponsData laserGunData;
@@ -102,7 +102,7 @@ public class Gun : Weapon
 
     public override IEnumerator WaitForReload()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(reloadTime);
 
         ReloadAmmo();
         SetUIOfAmmo();

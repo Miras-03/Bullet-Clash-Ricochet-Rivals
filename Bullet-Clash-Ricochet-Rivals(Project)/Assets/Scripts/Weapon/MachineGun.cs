@@ -101,7 +101,7 @@ public class MachineGun : Weapon
 
     public override IEnumerator WaitForReload()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(reloadTime);
 
         ReloadAmmo();
         SetUIOfAmmo();

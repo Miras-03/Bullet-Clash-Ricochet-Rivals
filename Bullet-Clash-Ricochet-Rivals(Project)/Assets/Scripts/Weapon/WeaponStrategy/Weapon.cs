@@ -32,6 +32,7 @@ public abstract class Weapon : MonoBehaviour
     protected float magnitudeOfCamera = 0.4f;
     protected const float shakeDuration = 0.2f;
 
+    protected const float reloadTime = 3.5f;
     [HideInInspector] public bool isReloading = false;
     protected bool isCanceled = false;
 
