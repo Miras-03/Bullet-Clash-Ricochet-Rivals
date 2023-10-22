@@ -1,22 +1,37 @@
-using Photon.Pun;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class Movement
 {
+    public static Movement Instance;
+
+    private Rigidbody rb;
+    private Transform playerTransform;
+    private Vector2 input;
+
     private const int walkSpeed = 4;
     private const int sprintSpeed = 8;
     private const int maxVelocityChange = 10;
 
     private const int jumpHeight = 5;
 
-    private Vector2 input;
-    private Rigidbody rb;
-
-    private bool sprinting;
+    public bool sprinting;
     private bool jumping;
-    private bool grounded = true;
+    public bool grounded = true;
 
-    private void Awake() => rb = GetComponent<Rigidbody>();
+    public Movement()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            return;
+    }
+
+    public void SetPlayerPhysics(Rigidbody rb, Transform playerTransform, Vector2 input)
+    {
+        this.rb = rb;
+        this.playerTransform = playerTransform;
+        this.input = input;
+    }
 
     public void Move()
     {
@@ -39,17 +54,11 @@ public class Movement : MonoBehaviour
         jumping = Input.GetButton("Jump");
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Floor"))
-            grounded = true;
-    }
-
     private Vector3 CalculateMovement(float speed)
     {
         Vector3 targetVelocity = new Vector3(input.x, 0, input.y);
 
-        targetVelocity = transform.TransformDirection(targetVelocity);
+        targetVelocity = playerTransform.TransformDirection(targetVelocity);
         targetVelocity *= speed;
 
         return targetVelocity;
@@ -58,24 +67,26 @@ public class Movement : MonoBehaviour
     private void ApplyVelocityChange(Vector3 targetVelocity)
     {
         Vector3 velocity = rb.velocity;
+        Vector3 velocityChange;
 
         if (input.magnitude > 0.5f)
         {
-            Vector3 velocityChange = targetVelocity - velocity;
-            velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-            velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-            velocityChange.y = 0;
-
-            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+            velocityChange = targetVelocity - velocity;
+            ClampVelocity(ref velocityChange);
         }
         else
         {
-            Vector3 counterVelocity = -velocity;
-            counterVelocity.x = Mathf.Clamp(counterVelocity.x, -maxVelocityChange, maxVelocityChange);
-            counterVelocity.z = Mathf.Clamp(counterVelocity.z, -maxVelocityChange, maxVelocityChange);
-            counterVelocity.y = 0;
-
-            rb.AddForce(counterVelocity, ForceMode.VelocityChange);
+            velocityChange = -velocity;
+            ClampVelocity(ref velocityChange);
         }
+
+        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+    }
+
+    private void ClampVelocity(ref Vector3 velocityChange)
+    {
+        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+        velocityChange.y = 0;
     }
 }

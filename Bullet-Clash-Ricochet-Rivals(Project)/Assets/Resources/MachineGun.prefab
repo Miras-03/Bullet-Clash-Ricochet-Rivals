@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1360701777792845330}
   - component: {fileID: 3515127906100578548}
   - component: {fileID: 7253558764645400210}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,13 +92,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2523379033096834201}
-  m_Layer: 0
+  - component: {fileID: 805357811177566442}
+  - component: {fileID: 4845668860715471384}
+  m_Layer: 6
   m_Name: MachineGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2523379033096834201
 Transform:
   m_ObjectHideFlags: 0
@@ -109,12 +111,51 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.154, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5584160320818360262}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &805357811177566442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944399906993567430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6271014c214b04fa81647e24ee97f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isReloading: 0
+  bulletPrefab: {fileID: 3491063704425201279}
+  bulletRB: {fileID: 2580437068640540813, guid: 1fb88933783486d42aa1a069903dd885,
+    type: 3}
+  firePoint: {fileID: 0}
+  reloadAnimator: {fileID: 4845668860715471384}
+--- !u!95 &4845668860715471384
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944399906993567430}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e8463f31147d1c94c9964797ce403f61, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2639977969212885827
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +167,7 @@ GameObject:
   - component: {fileID: 2728739139123066964}
   - component: {fileID: 2058828324739448118}
   - component: {fileID: 6052257850534138433}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Clip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +250,7 @@ GameObject:
   - component: {fileID: 6033267986346960046}
   - component: {fileID: 4421071894201346724}
   - component: {fileID: 4910501615552249869}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +333,8 @@ GameObject:
   - component: {fileID: 5584160320818360262}
   - component: {fileID: 8557921571113027680}
   - component: {fileID: 539698333688049776}
-  m_Layer: 0
+  - component: {fileID: 2663032618738867738}
+  m_Layer: 6
   m_Name: Main_Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -368,6 +410,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2663032618738867738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4567024265217537589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e05619dcd7a7047a6a8c32377d85bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swayClamp: 5
+  smoothing: 0.5
 --- !u!1 &7628598853409872125
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,7 +435,7 @@ GameObject:
   - component: {fileID: 806285077987991868}
   - component: {fileID: 3835916201023584860}
   - component: {fileID: 1842676005189941215}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}

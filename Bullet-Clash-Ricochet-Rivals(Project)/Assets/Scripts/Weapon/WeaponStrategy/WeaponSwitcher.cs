@@ -1,45 +1,55 @@
 using UnityEngine;
-using Photon.Pun;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class WeaponSwitcher : MonoBehaviour
 {
     [Header("OtherScripts")]
-    [SerializeField] private PlayerController playerController;
-    [SerializeField] private DisplayAmmo displayAmmo;
+    private PlayerController playerController;
+    private PhotonView playerPhotonView;
 
     [Space(20)]
-    [Header("WeaponGameObjects")]
-    [SerializeField] private List<GameObject> weaponGameObjects;
-
-    [Space(20)]
-    [Header("WeaponScripts")]
+    [Header("Weapons types")]
     [SerializeField] private List<Weapon> weapons;
 
     private int currentWeaponIndex = 0;
 
-    [PunRPC]
-    public void SwitchWeaponGameObject()
+    private void Awake()
     {
-        SetOffCurrentProcess();
+        playerController = GetComponent<PlayerController>();
+        playerPhotonView = GetComponent<PhotonView>();
+    }
+
+    public void ExecuteSwitch()
+    {
+        ResetReload();
         SetNewWeapon();
         UpdateUIIndicators();
     }
 
-    private void SetOffCurrentProcess()
+    private void ResetReload()
     {
-        weaponGameObjects[currentWeaponIndex].SetActive(false);
-        //weapons[currentWeaponIndex].TurnReloading(false);
-        //weapons[currentWeaponIndex].StopReloadCoroutine();
+        weapons[currentWeaponIndex].ResetAnimator();
+
+        weapons[currentWeaponIndex].TurnReloading(false);
+        weapons[currentWeaponIndex].StopReloadCoroutine();
     }
 
     private void SetNewWeapon()
     {
-        currentWeaponIndex = (currentWeaponIndex + 1) % weaponGameObjects.Count;
+        ShowCurrentWeapon(false);
+        SetWeaponIndex();
+        ShowCurrentWeapon(true);
 
-        weaponGameObjects[currentWeaponIndex].SetActive(true);
         playerController.SetWeapon(weapons[currentWeaponIndex]);
-        weapons[currentWeaponIndex].ResetAnimator();
+    }
+
+    private void SetWeaponIndex() => currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Count;
+
+    private void ShowCurrentWeapon(bool showOrNot)
+    {
+        playerPhotonView.RPC("ExecuteSwitch", RpcTarget.Others, currentWeaponIndex, showOrNot);
+        weapons[currentWeaponIndex].gameObject.SetActive(showOrNot);
     }
 
     private void UpdateUIIndicators()

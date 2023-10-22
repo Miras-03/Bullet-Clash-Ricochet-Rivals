@@ -4,30 +4,8 @@ using UnityEngine;
 
 public class Gun : Weapon
 {
-    [Header("BulletBelong")]
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private Rigidbody bulletRB;
-    [SerializeField] private Transform firePoint;
-
-    [Space(20)]
-    [Header("Animator")]
-    [SerializeField] private Animator animator;
-
-    private int destroyTime = 3;
-
-    private void Start()
-    {
-        ammo = 5;
-        mag = 2;
-        spareAmmo = 5;
-        maxAmmoCount = 5;
-
-        shootSpeed = 30;
-
-        spareAmmo = ammo;
-        SetUIOfAmmo();
-        ReloadAmmoIndicator();
-    }
+    [Header("WeaponDates")]
+    [SerializeField] private WeaponsData laserGunData;
 
     public override async void FireAsync()
     {
@@ -43,7 +21,8 @@ public class Gun : Weapon
             bulletRB.velocity = bullet.transform.forward * shootSpeed;
 
             if (!isCanceled)
-                await cameraShake.Shake(shakeDuration, magnitude);
+                await cameraShake.Shake(shakeDuration, magnitudeOfCamera);
+
             bulletDestroy.DestroyBullet(bullet, destroyTime);
         }
         else
@@ -64,7 +43,7 @@ public class Gun : Weapon
         if (shouldReload)
         {
             TurnReloading(true);
-            animator.SetTrigger(ReloadGun);
+            reloadAnimator.SetTrigger(ReloadWeapon);
             reloadCoroutine = StartCoroutine(WaitForReload());
         }
     }
@@ -93,17 +72,33 @@ public class Gun : Weapon
         }
     }
 
-    public override void SetUIOfAmmo() => displayAmmo.SetAmmo(ammo, maxAmmoCount);
+    protected override void SetValues()
+    {
+        bulletPrefab = laserGunData.bulletPrefab;
+        bulletRB = laserGunData.bulletRB;
+
+        ammo = laserGunData.ammo;
+        spareAmmo = ammo;
+        maxAmmoCount = ammo;
+        mag = laserGunData.mag;
+
+        shootSpeed = laserGunData.shootSpeed;
+
+        magnitudeOfCamera = laserGunData.magnitudeOfCamera;
+
+        destroyTime = laserGunData.destroyTime;
+    }
+
+    public override void SetUIOfAmmo() => displayAmmo.SetAmmo(ammo, maxAmmoCount);  
     public override void ReloadAmmoIndicator() => displayAmmo.ReloadAmmoIndicator(mag, ammo, spareAmmo);
 
-    public override void StopReloadCoroutine() => StopCoroutine(reloadCoroutine);
-
-    public override void ResetAnimator()
+    public override void StopReloadCoroutine()
     {
-        //TurnReloading(true);
-        animator.Rebind();
-        animator.Update(0f);
+        if (reloadCoroutine != null)
+            StopCoroutine(reloadCoroutine);
     }
+
+    public override void ResetAnimator() => reloadAnimator.Rebind();
 
     public override IEnumerator WaitForReload()
     {

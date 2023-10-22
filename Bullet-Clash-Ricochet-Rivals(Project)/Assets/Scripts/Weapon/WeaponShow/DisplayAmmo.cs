@@ -1,15 +1,14 @@
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
-public class DisplayAmmo : MonoBehaviour
+public class DisplayAmmo
 {
     private Image ammoCircle;
 
     private TextMeshProUGUI ammoText;
     private TextMeshProUGUI magText;
 
-    private void Awake()
+    public void SetReferences()
     {
         ammoCircle = UIAmmoSingleton.Instance.uiImage;
 

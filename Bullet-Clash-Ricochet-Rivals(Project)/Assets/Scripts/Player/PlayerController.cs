@@ -1,18 +1,33 @@
-using Photon.Pun;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Scripts")]
-    [SerializeField] private PhotonView playerPhotonView;
-    [SerializeField] private Movement movement;
+    private Movement movement;
 
     private Weapon weapon;
+    private WeaponSwitcher weaponSwitcher;
+
+    [SerializeField] private CameraZoom cameraZoom;
+
+    private Rigidbody rb;
+    private Transform playerTransform;
+    private Vector3 input;
 
     private float fireCoolDown = 0f;
     private bool canFire = true;
 
-    private void Start() => playerPhotonView.RPC("SwitchWeaponGameObject", RpcTarget.All);
+    private void Awake()
+    {
+        weaponSwitcher = GetComponent<WeaponSwitcher>();
+
+        rb = GetComponent<Rigidbody>();
+        playerTransform = transform;
+
+        movement = new Movement();
+        movement.SetPlayerPhysics(rb, playerTransform, input);
+    }
+
+    private void Start() => weaponSwitcher.ExecuteSwitch();
 
     private void Update()
     {
@@ -21,7 +36,18 @@ public class PlayerController : MonoBehaviour
         GetWeaponInput();
     }
 
-    private void FixedUpdate() => movement.Move();
+
+    private void FixedUpdate()
+    {
+        movement.Move();
+        cameraZoom.CheckAndZoomTheCamera();
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Floor"))
+            movement.grounded = true;
+    }
 
     private void GetFireInput()
     {
@@ -44,7 +70,7 @@ public class PlayerController : MonoBehaviour
     private void GetWeaponInput()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
-            playerPhotonView.RPC("SwitchWeaponGameObject", RpcTarget.All);
+            weaponSwitcher.ExecuteSwitch();
     }
 
     public void SetWeapon(Weapon weapon) => this.weapon = weapon;

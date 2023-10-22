@@ -13,12 +13,14 @@ public class CameraShake : MonoBehaviour
 
     private float cameraYPosition;
     private float weaponYPosition;
-    private float xPositionOfWeapon;
+    private float handPosition;
+
+    private const float rightSideOfWeaponHand = 0.2f;
 
     private void Start()
     {
         localTransform = transform;
-        cameraYPosition = transform.position.y;
+        cameraYPosition = playerTransform.position.y;
         weaponYPosition = weaponTransform.position.y;
     }
 
@@ -28,24 +30,36 @@ public class CameraShake : MonoBehaviour
 
         while (elapsed < duration)
         {
-            xPositionOfWeapon = playerTransform.position.x - 0.2f;
-
-            originalPositionForWeapon = new Vector3(xPositionOfWeapon, weaponYPosition, weaponTransform.position.z);
-            originalPositionForCamera = new Vector3(playerTransform.position.x, cameraYPosition, playerTransform.position.z);
-
-            float camShake = Random.Range(-1.0f, 1.0f) * magnitude;
-
-            Vector3 cameraShakeOffset = new Vector3(camShake, 0, camShake);
-
-            localTransform.position = originalPositionForCamera + cameraShakeOffset;
+            SetPositionForWeapon(rightSideOfWeaponHand);
+            SetOriginalPositions();
+            ShakeCamera(magnitude);
 
             elapsed += Time.deltaTime;
             await Task.Yield();
         }
 
-        originalPositionForCamera = new Vector3(playerTransform.position.x, cameraYPosition, playerTransform.position.z);
-        originalPositionForWeapon = new Vector3(xPositionOfWeapon, weaponYPosition, weaponTransform.position.z);
+        SetOriginalPositions();
+        InitializeOriginalPositions();
+    }
 
+    private void ShakeCamera(float magnitude)
+    {
+        float camShake = Random.Range(-1.0f, 1.0f) * magnitude;
+        Vector3 cameraShakeOffset = new Vector3(camShake, cameraYPosition, camShake);
+        localTransform.position = originalPositionForCamera + cameraShakeOffset;
+    }
+
+    private void SetPositionForWeapon(float targetPosition) => 
+        handPosition = playerTransform.position.x - targetPosition;
+
+    private void SetOriginalPositions()
+    {
+        originalPositionForWeapon = new Vector3(handPosition, weaponYPosition, weaponTransform.position.z);
+        originalPositionForCamera = new Vector3(playerTransform.position.x, cameraYPosition, playerTransform.position.z);
+    }
+
+    private void InitializeOriginalPositions()
+    {
         localTransform.position = originalPositionForCamera;
         weaponTransform.position = originalPositionForWeapon;
     }

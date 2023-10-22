@@ -12,13 +12,27 @@ public class PlayerSetup : MonoBehaviour, IRoomObserver
     [Header("PlayerNickname")]
     [SerializeField] private GameObject nameTag; 
     [SerializeField] private TextMeshPro nicknameText;
+
+    [Space(20)]
+    [Header("WeaponGameObjects")]
+    [SerializeField] private GameObject thirdPersonWeaponHolder;
+
     private string nickname;
 
     public void IsLocalPlayer()
     {
+        DisableWeapons();
+        EnablePlayer();
+
+        GetComponent<Renderer>().enabled = false;
+    }
+
+    private void DisableWeapons() => thirdPersonWeaponHolder.SetActive(false);
+
+    private void EnablePlayer()
+    {
         playerController.enabled = true;
         playerCamera.SetActive(true);
-        GetComponent<Renderer>().enabled = false;
     }
 
     [PunRPC]

@@ -13,6 +13,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Header("PlayerProperties")]
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private PlayerNickname playerNickname;
+    private DisplayAmmo displayAmmo;
     private int playerCount;
 
     [Space(20)]
