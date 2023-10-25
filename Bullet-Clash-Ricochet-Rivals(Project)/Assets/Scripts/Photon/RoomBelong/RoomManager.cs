@@ -5,15 +5,12 @@ using UnityEngine;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
-    public static event Action OnRoomConnected;
-
-    private Room room;
+    public static event Action OnGameStarted;
 
     [Space(20)]
     [Header("PlayerProperties")]
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private PlayerNickname playerNickname;
-    private DisplayAmmo displayAmmo;
     private int playerCount;
 
     [Space(20)]
@@ -26,18 +23,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     [HideInInspector] public string roomName = "RoomWithoutName";
 
-    public override void OnJoinedRoom()
+    private void Start()
     {
-        base.OnJoinedRoom();
-
         SelectSpawnPoint();
-        InstantiatePlayer();
+        CheckAndInstantiatePlayer();
     }
 
-    private void InstantiatePlayer()
+    private void CheckAndInstantiatePlayer()
     {
         Quaternion playersQuaternion = Quaternion.Euler(0, 180, 0);
-        if (playerCount > 1)
+        if (IsSecondPlayer())
             playersQuaternion = Quaternion.identity;
 
         GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, spawnPoints[randomPoint].position, playersQuaternion);
@@ -45,12 +40,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
         StartCoroutine(WaitForDelay(player));
     }
 
+    private bool IsSecondPlayer() => playerCount > 1;
+
     private void SelectSpawnPoint()
     {
+        int firstPlayerSpawnPoint = UnityEngine.Random.Range(0, 2);
+        int secondPlayerSpawnPoint = UnityEngine.Random.Range(3, 6);
+
         playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         randomPoint = playerCount == 1
-            ? UnityEngine.Random.Range(0, 2)
-            : UnityEngine.Random.Range(3, 6);
+            ? firstPlayerSpawnPoint
+            : secondPlayerSpawnPoint;
     }
 
     private void EnablePrefab(GameObject prefab) => prefab.GetComponent<PlayerSetup>().IsLocalPlayer();
@@ -65,6 +65,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         foreach (GameObject item in roomEnvironment)
             item.SetActive(false);
 
-        OnRoomConnected.Invoke();
+        OnGameStarted.Invoke();
     }
 }

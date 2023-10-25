@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-public class RoomObserverController : MonoBehaviour
+public class RoomObserverHandler : MonoBehaviour
 {
     private Room room;
 
@@ -11,25 +11,26 @@ public class RoomObserverController : MonoBehaviour
     [SerializeField] private UIRoomObservers uiRoomObservers;
 
     [Inject]
-    public void Construct(Room room) => this.room = room;
+    public void Constructor(Room room) => this.room = room;
 
     private void OnEnable() => RoomManager.OnGameStarted += GetObservers;
-    private void OnDestroy() => RoomManager.OnGameStarted -= GetObservers;
 
-    public void AddObservers()
+    private void OnDestroy() => room.RemoveObservers();
+
+    private void AddObservers()
     {
         room.AddObserver(playerSetup);
         room.AddObserver(healthManager);
         room.AddObserver(uiRoomObservers);
     }
 
-    private void OnDisable() => room.RemoveObservers();
-
     private void GetObservers()
     {
-        playerSetup = FindObjectOfType<PlayerSetup>();
+        GetReferenceForPlayer();
 
         AddObservers();
         room.NotifyObservers();
     }
+
+    private void GetReferenceForPlayer() => playerSetup = FindObjectOfType<PlayerSetup>();
 }
