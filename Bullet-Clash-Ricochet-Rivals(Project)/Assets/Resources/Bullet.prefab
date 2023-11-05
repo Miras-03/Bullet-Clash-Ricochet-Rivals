@@ -149,9 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49cc2fc315135b4429e514c707ae8d4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: {fileID: 5456744942745197280, guid: 0426dba698db80d4582f2c64007c87f0,
-    type: 3}
-  reflectionLayers:
+  reflectionLayer:
     serializedVersion: 2
     m_Bits: 8
   explosionPrefab: {fileID: 4794043405585894037, guid: 37138c0c33167b04fa1fb90b7f5a794f,

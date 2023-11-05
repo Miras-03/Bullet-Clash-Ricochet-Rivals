@@ -216,7 +216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83e4385645e5784494826260cba0ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 9013237201025263862}
 --- !u!1 &2074148664227038477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1091,7 +1090,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 4286167357606269737}
   playerCamera: {fileID: 7993752474498546764}
-  nameTag: {fileID: 5558342405551689757}
   nicknameText: {fileID: 7189211487523245720}
   thirdPersonWeaponHolder: {fileID: 5960978466732884422}
 --- !u!114 &3959234716459962884
