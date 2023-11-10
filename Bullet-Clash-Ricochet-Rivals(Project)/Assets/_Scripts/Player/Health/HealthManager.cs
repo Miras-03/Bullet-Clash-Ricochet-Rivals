@@ -1,35 +1,39 @@
+using PlayerSpace;
 using UnityEngine;
 using Zenject;
 
-public class HealthManager : MonoBehaviour, IRoomObserver
+namespace HealthSpace
 {
-    private Health health;
-    private PlayerHealth playerHealth;
-    [SerializeField] private HealthBar healthBar;
-
-    [Inject]
-    public void Construct(Health health) => this.health = health;
-
-    public void TakeDamage(int damageAmount) => health.TakeDamage -= damageAmount;
-    public void SetMaxHealthValue(int value) => health.TakeDamage = value;
-
-    private void GetReferenceOfObservers()
+    public sealed class HealthManager : MonoBehaviour, IRoomObserver
     {
-        playerHealth = FindObjectOfType<PlayerHealth>();
-        AddObservers();
-    }
+        private Health health;
+        private PlayerHealth playerHealth;
+        [SerializeField] private HealthBar healthBar;
 
-    private void AddObservers()
-    {
-        health.AddHealthObserver(healthBar);
-        health.AddDieableObserver(playerHealth);
-    }
+        [Inject]
+        public void Construct(Health health) => this.health = health;
 
-    private void OnDisable()
-    {
-        health.RemoveHealthObservers();
-        health.RemoveDieableObservers();
-    }
+        public void TakeDamage(int damageAmount) => health.TakeDamage -= damageAmount;
+        public void SetMaxHealthValue(int value) => health.TakeDamage = value;
 
-    public void Execute() => GetReferenceOfObservers();
+        private void GetReferenceOfObservers()
+        {
+            playerHealth = FindObjectOfType<PlayerHealth>();
+            AddObservers();
+        }
+
+        private void AddObservers()
+        {
+            health.AddHealthObserver(healthBar);
+            health.AddDieableObserver(playerHealth);
+        }
+
+        private void OnDisable()
+        {
+            health.RemoveHealthObservers();
+            health.RemoveDieableObservers();
+        }
+
+        public void Execute() => GetReferenceOfObservers();
+    }
 }

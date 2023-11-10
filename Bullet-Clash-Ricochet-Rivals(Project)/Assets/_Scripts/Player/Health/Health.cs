@@ -1,43 +1,46 @@
 using System.Collections.Generic;
 
-public class Health 
+namespace HealthSpace
 {
-    private HashSet<IDieable> dieableObservers = new HashSet<IDieable>();
-    private HashSet<IHealthObserver> healthObservers = new HashSet<IHealthObserver>();
-
-    private int health;
-    private const int healthOverValue = 0;
-
-    public int TakeDamage
+    public sealed class Health
     {
-        get => health;
-        set
+        private HashSet<IDieable> dieableObservers = new HashSet<IDieable>();
+        private HashSet<IHealthObserver> healthObservers = new HashSet<IHealthObserver>();
+
+        private int health;
+        private const int healthOverValue = 0;
+
+        public int TakeDamage
         {
-            if (value >= healthOverValue)
-            { 
-                health = value;
-                NotifyObserversAboutChange();
+            get => health;
+            set
+            {
+                if (value >= healthOverValue)
+                {
+                    health = value;
+                    NotifyObserversAboutChange();
+                }
+                else
+                    NotifyObserversAboutDeath();
             }
-            else
-                NotifyObserversAboutDeath();
         }
-    }
 
-    public void AddDieableObserver(IDieable observer) => dieableObservers.Add(observer);
-    public void AddHealthObserver(IHealthObserver observer) => healthObservers.Add(observer);
+        public void AddDieableObserver(IDieable observer) => dieableObservers.Add(observer);
+        public void AddHealthObserver(IHealthObserver observer) => healthObservers.Add(observer);
 
-    public void RemoveDieableObservers() => dieableObservers.Clear();
-    public void RemoveHealthObservers() => healthObservers.Clear();
+        public void RemoveDieableObservers() => dieableObservers.Clear();
+        public void RemoveHealthObservers() => healthObservers.Clear();
 
-    public void NotifyObserversAboutDeath()
-    {
-        foreach (IDieable observer in dieableObservers)
-            observer.PerformMurder();
-    }
+        public void NotifyObserversAboutDeath()
+        {
+            foreach (IDieable observer in dieableObservers)
+                observer.PerformMurder();
+        }
 
-    public void NotifyObserversAboutChange()
-    {
-        foreach (IHealthObserver observer in healthObservers)
-            observer.OnHealthChanged(health);
+        public void NotifyObserversAboutChange()
+        {
+            foreach (IHealthObserver observer in healthObservers)
+                observer.OnHealthChanged(health);
+        }
     }
 }

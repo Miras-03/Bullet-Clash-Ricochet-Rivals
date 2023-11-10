@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class RoomEnvironment : MonoBehaviour, IRoomObserver
+namespace RoomSpace
 {
-    [SerializeField] private Camera roomCamera;
+    public class RoomEnvironment : MonoBehaviour, IRoomObserver
+    {
+        [SerializeField] private Camera roomCamera;
 
-    public void Execute() => roomCamera.enabled = false;
+        public void Execute() => roomCamera.enabled = false;
+    }
 }

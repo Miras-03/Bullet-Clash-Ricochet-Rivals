@@ -1,10 +1,11 @@
 using System;
+using Nickname;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using Zenject;
 
-public class LobbyManager : MonoBehaviourPunCallbacks
+public sealed class LobbyManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private NicknameChanger playerNickname;
     private SceneManager sceneManager;
@@ -15,7 +16,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-        //QuickStart();
+        QuickStart();
     }
 
     public void QuickStart()

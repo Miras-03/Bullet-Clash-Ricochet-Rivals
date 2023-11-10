@@ -1,25 +1,30 @@
 using UnityEngine;
 
-public class SoundSingleton : MonoBehaviour
+namespace Audio
 {
-    public static SoundSingleton Instance;
-    [SerializeField] private AudioSource[] audioSounds;
-
-    public AudioSource GetGunSound { get => audioSounds[0]; }
-    public AudioSource GetLuckSound { get => audioSounds[1]; }
-    public AudioSource GetExplosion { get => audioSounds[2]; }
-
-    private void Awake()
+    public sealed class SoundSingleton : MonoBehaviour
     {
-        if (Instance == null)
+        public static SoundSingleton Instance;
+        [SerializeField] private AudioSource[] audioSounds;
+
+        public AudioSource GetLaserGunSound { get => audioSounds[0]; }
+        public AudioSource GetMachineGunSound { get => audioSounds[1]; }
+        public AudioSource GetLuckSound { get => audioSounds[2]; }
+        public AudioSource GetUnlockSound { get => audioSounds[3]; }
+        public AudioSource GetExplosion { get => audioSounds[4]; }
+
+        private void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
     }
 }

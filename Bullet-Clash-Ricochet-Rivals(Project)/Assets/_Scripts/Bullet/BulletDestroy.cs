@@ -2,24 +2,29 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
-public class BulletDestroy : MonoBehaviour
+namespace Bullet
 {
-    private GameObject bullet;
-    private int destroyTime = 3;
-
-    public void SetAndDestroyBullet(GameObject bullet, int time)
+    public sealed class BulletDestroy : MonoBehaviour
     {
-        this.bullet = bullet;
+        private GameObject bullet;
+        private int destroyTime = 3;
 
-        destroyTime = time;
-        StartCoroutine(WaitForDestroyBullet());
-    }
+        public void SetAndDestroyBullet(GameObject bullet, int time)
+        {
+            this.bullet = bullet;
 
-    private IEnumerator WaitForDestroyBullet()
-    {
-        yield return new WaitForSeconds(destroyTime);
+            destroyTime = time;
+            StartCoroutine(WaitForDestroyBullet());
+        }
 
-        if (bullet != null)
-            PhotonNetwork.Destroy(bullet);
+        private IEnumerator WaitForDestroyBullet()
+        {
+            yield return new WaitForSeconds(destroyTime);
+
+            if (bullet != null)
+                PhotonNetwork.Destroy(bullet);
+        }
+
+        public int DestroyTime { get => destroyTime; set => destroyTime = value; }
     }
 }

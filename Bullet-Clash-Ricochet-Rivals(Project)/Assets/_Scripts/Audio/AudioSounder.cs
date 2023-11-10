@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public static class AudioSounder
+namespace Audio
 {
-    public static void SoundAudio(AudioSource audio) => audio.Play();
+    public static class AudioSounder
+    {
+        public static void SoundAudio(AudioSource audio) => audio.Play();
+    }
 }

@@ -1,6 +1,9 @@
 using Zenject;
 
-public class RoomInstaller : MonoInstaller
+namespace RoomSpace
 {
-    public override void InstallBindings() => Container.Bind<Room>().AsSingle();
+    public sealed class RoomInstaller : MonoInstaller
+    {
+        public override void InstallBindings() => Container.Bind<Room>().AsSingle();
+    }
 }

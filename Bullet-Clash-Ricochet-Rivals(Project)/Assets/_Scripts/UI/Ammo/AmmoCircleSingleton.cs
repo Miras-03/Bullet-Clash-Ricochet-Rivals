@@ -1,25 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AmmoCircleSingleton : MonoBehaviour
+namespace UISpace
 {
-    public static AmmoCircleSingleton Instance { get; private set; }
-
-    [SerializeField] private Image ammoQuantityInCircle;
-
-    public Image GetAmmoQuantity { get => ammoQuantityInCircle; }
-
-    private void Awake()
+    public sealed class AmmoCircleSingleton : MonoBehaviour
     {
-        if (Instance == null)
+        public static AmmoCircleSingleton Instance { get; private set; }
+
+        [SerializeField] private Image ammoQuantityInCircle;
+
+        public Image GetAmmoQuantity { get => ammoQuantityInCircle; }
+
+        private void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        { 
-            Destroy(gameObject);
-            return;
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
     }
 }

@@ -1,65 +1,82 @@
+using Audio;
 using Photon.Pun;
+using PlayerSpace;
 using UnityEngine;
+using WeaponSpace;
 
-public class Bullet : MonoBehaviour
+namespace Bullet
 {
-    [SerializeField] private LayerMask reflectionLayer;
-
-    [Space(20)]
-    [SerializeField] private GameObject explosionPrefab;
-
-    private const int speed = 30;
-
-    private const string Player = nameof(Player);
-    private const string TakeDamage = nameof(TakeDamage);
-
-    private void FixedUpdate() => MoveBullet();
-
-    private void MoveBullet() => transform.Translate(Vector3.forward * speed * Time.fixedDeltaTime);
-
-    private void OnCollisionEnter(Collision collision)
+    public sealed class Bullet : MonoBehaviour
     {
-        GameObject collisionObject = collision.gameObject;
+        [SerializeField] private LayerMask reflectionLayer;
 
-        if (collisionObject.CompareTag(Player))
+        [Space(20)]
+        [SerializeField] private GameObject explosionPrefab;
+
+        private Weapon weapon;
+
+        private int speed;
+
+        private const string Player = nameof(Player);
+        private const string TakeDamage = nameof(TakeDamage);
+
+        private void FixedUpdate() => MoveBullet();
+
+        private void MoveBullet()
         {
-            Explode();
-            ApplyDamage(collisionObject);
+            transform.Translate(Vector3.forward * speed * Time.fixedDeltaTime);
         }
-        else if (collisionObject.CompareTag(nameof(Bullet)))
-            Explode();
-        else if ((reflectionLayer.value & 1 << collision.gameObject.layer) != 0)
-            ReflectBullet(collision.contacts[0].normal);
-    }
 
-    private void Explode()
-    {
-        ShowExplosionEffect();
-        Destroy(gameObject);
-        SoundExplodeAudio();
-    }
-
-    private void ApplyDamage(GameObject playerObject)
-    {
-        PhotonView targetPhotonView = playerObject.GetComponent<PhotonView>();
-
-        if (targetPhotonView.IsMine)
+        private void OnCollisionEnter(Collision collision)
         {
-            PlayerHealth playerHealth = playerObject.GetComponent<PlayerHealth>();
-            playerHealth.TakeDamage();
+            GameObject collisionObject = collision.gameObject;
+
+            if (collisionObject.CompareTag(Player))
+            {
+                Explode();
+                ApplyDamage(collisionObject);
+            }
+            else if (collisionObject.CompareTag(nameof(Bullet)))
+                Explode();
+            else if ((reflectionLayer.value & 1 << collision.gameObject.layer) != 0)
+                ReflectBullet(collision.contacts[0].normal);
         }
-        else
-            targetPhotonView.RPC(TakeDamage, targetPhotonView.Owner);
+
+        private void Explode()
+        {
+            ShowExplosionEffect();
+            Destroy(gameObject);
+            SoundExplodeAudio();
+        }
+
+        private void ApplyDamage(GameObject playerObject)
+        {
+            PhotonView targetPhotonView = playerObject.GetComponent<PhotonView>();
+
+            if (targetPhotonView.IsMine)
+            {
+                PlayerHealth playerHealth = playerObject.GetComponent<PlayerHealth>();
+                playerHealth.TakeDamage();
+            }
+            else
+                targetPhotonView.RPC(TakeDamage, targetPhotonView.Owner);
+        }
+
+        private void ReflectBullet(Vector3 reflectionNormal)
+        {
+            Vector3 reflectedDirection = Vector3.Reflect(transform.forward, reflectionNormal);
+            transform.forward = reflectedDirection;
+        }
+
+        private void ShowExplosionEffect() => Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+
+        private void SoundExplodeAudio() =>
+            AudioSounder.SoundAudio(SoundSingleton.Instance.GetExplosion);
+
+        public void SetNewWeapon(Weapon weapon)
+        {
+            this.weapon = weapon;
+            speed = weapon.ShotSpeed;
+        }
     }
-
-    private void ReflectBullet(Vector3 reflectionNormal)
-    {
-        Vector3 reflectedDirection = Vector3.Reflect(transform.forward, reflectionNormal);
-        transform.forward = reflectedDirection;
-    }
-
-    private void ShowExplosionEffect() => Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-
-    private void SoundExplodeAudio() =>
-        AudioSounder.SoundAudio(SoundSingleton.Instance.GetExplosion);
 }

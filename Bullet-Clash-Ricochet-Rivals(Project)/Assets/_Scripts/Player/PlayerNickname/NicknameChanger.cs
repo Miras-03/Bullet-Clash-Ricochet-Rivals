@@ -2,15 +2,18 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-public class NicknameChanger : MonoBehaviourPunCallbacks
+namespace Nickname
 {
-    [SerializeField] private TMP_InputField pickName;
-
-    public void SetNickname() => PhotonNetwork.NickName = pickName.text;
-
-    public string Nickname 
+    public sealed class NicknameChanger : MonoBehaviourPunCallbacks
     {
-        get => PhotonNetwork.NickName;
-        set => PhotonNetwork.NickName = pickName.text;
+        [SerializeField] private TMP_InputField pickName;
+
+        public void SetNickname() => PhotonNetwork.NickName = pickName.text;
+
+        public string Nickname
+        {
+            get => PhotonNetwork.NickName;
+            set => PhotonNetwork.NickName = pickName.text;
+        }
     }
 }

@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 
-public class Room
+namespace RoomSpace
 {
-    private HashSet<IRoomObserver> roomObservers = new HashSet<IRoomObserver>();
-
-    public void AddObserver(IRoomObserver observer) => roomObservers.Add(observer);
-    public void RemoveObservers() => roomObservers.Clear();
-
-    public void NotifyObservers()
+    public sealed class Room
     {
-        foreach (IRoomObserver roomObserver in roomObservers)
-            roomObserver.Execute();
+        private HashSet<IRoomObserver> roomObservers = new HashSet<IRoomObserver>();
+
+        public void AddObserver(IRoomObserver observer) => roomObservers.Add(observer);
+        public void RemoveObservers() => roomObservers.Clear();
+
+        public void NotifyObservers()
+        {
+            foreach (IRoomObserver roomObserver in roomObservers)
+                roomObserver.Execute();
+        }
     }
 }

@@ -1,3 +1,4 @@
+using RoomSpace;
 using Zenject;
 
 public class RoomObserverInterfacesInstaller : MonoInstaller

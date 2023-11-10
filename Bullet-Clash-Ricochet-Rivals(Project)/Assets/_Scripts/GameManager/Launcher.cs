@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-public class Launcher : MonoBehaviourPunCallbacks
+public sealed class Launcher : MonoBehaviourPunCallbacks
 {
     private SceneManager sceneManager;
 

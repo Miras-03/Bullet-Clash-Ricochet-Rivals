@@ -1,10 +1,13 @@
 using Zenject;
 
-public class HealthInstaller : MonoInstaller
+namespace HealthSpace
 {
-    public override void InstallBindings()
+    public sealed class HealthInstaller : MonoInstaller
     {
-        Container.Bind<Health>().AsSingle();
-        Container.Bind<HealthManager>().FromComponentInHierarchy().AsSingle();
+        public override void InstallBindings()
+        {
+            Container.Bind<Health>().AsSingle();
+            Container.Bind<HealthManager>().FromComponentInHierarchy().AsSingle();
+        }
     }
 }

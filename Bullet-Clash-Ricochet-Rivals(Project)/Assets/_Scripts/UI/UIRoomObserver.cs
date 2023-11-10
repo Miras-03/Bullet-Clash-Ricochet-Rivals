@@ -2,29 +2,32 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIRoomObserver : MonoBehaviour, IRoomObserver
+namespace UISpace
 {
-    [Header("UI Images")]
-    [SerializeField] private Image[] uiImages;
-
-    [Header("UI Texts")]
-    [SerializeField] private TextMeshProUGUI[] texts;
-
-    public void Execute()
+    public sealed class UIRoomObserver : MonoBehaviour, IRoomObserver
     {
-        EnableImages(uiImages);
-        EnableTexts();
-    }
+        [Header("UI Images")]
+        [SerializeField] private Image[] uiImages;
 
-    private void EnableImages(Image[] images)
-    {
-        foreach (Image image in images)
-            image.enabled = true;
-    }
+        [Header("UI Texts")]
+        [SerializeField] private TextMeshProUGUI[] texts;
 
-    private void EnableTexts()
-    {
-        foreach (TextMeshProUGUI text in texts)
-            text.enabled = true;
+        public void Execute()
+        {
+            EnableImages(uiImages);
+            EnableTexts();
+        }
+
+        private void EnableImages(Image[] images)
+        {
+            foreach (Image image in images)
+                image.enabled = true;
+        }
+
+        private void EnableTexts()
+        {
+            foreach (TextMeshProUGUI text in texts)
+                text.enabled = true;
+        }
     }
 }

@@ -18,6 +18,5 @@ MonoBehaviour:
     type: 3}
   ammo: 5
   mag: 2
-  shootSpeed: 30
-  magnitudeOfCamera: 0.4
+  shootSpeed: 90
   destroyTime: 3

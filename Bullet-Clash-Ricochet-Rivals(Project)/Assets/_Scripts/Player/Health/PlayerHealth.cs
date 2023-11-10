@@ -1,18 +1,22 @@
+using HealthSpace;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour, IDieable
+namespace PlayerSpace
 {
-    private HealthManager healthManager;
-    private const int damageValue = 25;
-    private const int maxHealthValue = 100;
+    public sealed class PlayerHealth : MonoBehaviour, IDieable
+    {
+        private HealthManager healthManager;
+        private const int damageValue = 25;
+        private const int maxHealthValue = 100;
 
-    private void Awake() => healthManager = FindObjectOfType<HealthManager>();
+        private void Awake() => healthManager = FindObjectOfType<HealthManager>();
 
-    private void Start() => healthManager.SetMaxHealthValue(maxHealthValue);
+        private void Start() => healthManager.SetMaxHealthValue(maxHealthValue);
 
-    public void PerformMurder() => Destroy(gameObject);
+        public void PerformMurder() => Destroy(gameObject);
 
-    [PunRPC]
-    public void TakeDamage() => healthManager.TakeDamage(damageValue);
+        [PunRPC]
+        public void TakeDamage() => healthManager.TakeDamage(damageValue);
+    }
 }
