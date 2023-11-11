@@ -1,13 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Photon.Pun;
-using PlayerSpace;
 using Audio;
+using System;
 
 namespace WeaponSpace
 {
     public sealed class WeaponSwitcher : MonoBehaviour
     {
+        public static Action<Weapon> OnSwitchWeapon;
+
         [Header("OtherScripts")]
         private PhotonView playerPhotonView;
 
@@ -15,26 +17,15 @@ namespace WeaponSpace
         [Header("Weapons types")]
         [SerializeField] private List<Weapon> weapons;
 
-        [SerializeField] private Bullet.Bullet bullet;
-        private PlayerController playerController;
-        private PlayerInput playerInput;
-
         private int currentWeaponIndex = 0;
 
-        private void Awake()
-        {
-            playerPhotonView = GetComponent<PhotonView>();
-            playerController = GetComponent<PlayerController>();
-
-            playerInput = new PlayerInput();
-        }
+        private void Awake() => playerPhotonView = GetComponent<PhotonView>();
 
         public void ExecuteWeaponSwitch()
         {
             ResetReload();
             SetNewWeapon();
-
-            playerInput.ChangeFireExpect();
+            OnSwitchWeapon.Invoke(weapons[currentWeaponIndex]);
 
             AudioSounder.SoundAudio(SoundSingleton.Instance.GetUnlockSound);
             ImageSingleton.Instance.SetCrosshair();
@@ -52,9 +43,6 @@ namespace WeaponSpace
             ShowCurrentWeapon(false);
             SetWeaponIndex();
             ShowCurrentWeapon(true);
-
-            bullet.SetNewWeapon(weapons[currentWeaponIndex]);
-            playerController.SetWeapon(weapons[currentWeaponIndex]);
         }
 
         private void ShowCurrentWeapon(bool showOrNot)

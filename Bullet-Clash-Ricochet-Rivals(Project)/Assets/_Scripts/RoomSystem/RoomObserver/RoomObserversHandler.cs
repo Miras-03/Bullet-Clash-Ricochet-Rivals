@@ -5,7 +5,7 @@ using Zenject;
 
 namespace RoomSpace
 {
-    public class RoomObserverHandler : IInitializable, IDisposable
+    public sealed class RoomObserverHandler : IInitializable, IDisposable
     {
         private Room room;
         private HealthManager healthManager;
@@ -15,8 +15,7 @@ namespace RoomSpace
         [Inject]
         public void Constructor(
             Room room, RoomEnvironment roomEnvironment,
-            HealthManager healthManager, UIRoomObserver uiRoomObservers)
-        {
+            HealthManager healthManager, UIRoomObserver uiRoomObservers) {
 
             this.room = room;
             this.roomEnvironment = roomEnvironment;

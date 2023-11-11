@@ -1,6 +1,7 @@
 using Audio;
 using Photon.Pun;
 using PlayerSpace;
+using System.Collections.Generic;
 using UnityEngine;
 using WeaponSpace;
 
@@ -13,6 +14,10 @@ namespace Bullet
         [Space(20)]
         [SerializeField] private GameObject explosionPrefab;
 
+        [Space(20)]
+        [Header("Weapons types")]
+        [SerializeField] private List<Weapon> weapons;
+
         private Weapon weapon;
 
         private int speed;
@@ -22,10 +27,7 @@ namespace Bullet
 
         private void FixedUpdate() => MoveBullet();
 
-        private void MoveBullet()
-        {
-            transform.Translate(Vector3.forward * speed * Time.fixedDeltaTime);
-        }
+        private void MoveBullet() => transform.Translate(Vector3.forward * speed * Time.fixedDeltaTime);
 
         private void OnCollisionEnter(Collision collision)
         {

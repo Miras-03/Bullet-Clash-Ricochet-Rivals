@@ -26,6 +26,9 @@ namespace PlayerSpace
             movement = new Movement();
         }
 
+        private void OnEnable() => WeaponSwitcher.OnSwitchWeapon += SetNewWeapon;
+        private void OnDisable() => WeaponSwitcher.OnSwitchWeapon -= SetNewWeapon;
+
         private void Start()
         {
             weaponSwitcher.ExecuteWeaponSwitch();
@@ -60,6 +63,10 @@ namespace PlayerSpace
                 weaponSwitcher.ExecuteWeaponSwitch();
         }
 
-        public void SetWeapon(Weapon weapon) => playerInput.Weapon = weapon;
+        public void SetNewWeapon(Weapon weapon)
+        {
+            playerInput.Weapon = weapon;
+            playerInput.IsLaserGun = !playerInput.IsLaserGun;
+        }
     }
 }

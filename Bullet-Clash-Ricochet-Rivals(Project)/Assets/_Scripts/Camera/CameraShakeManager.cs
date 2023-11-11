@@ -30,10 +30,10 @@ namespace CameraSpace
             switch (weaponType)
             {
                 case nameof(LaserGun):
-                    magnitudeOfCamera = 1.0f;
+                    magnitudeOfCamera = 0.9f;
                     break;
                 case nameof(MachineGun):
-                    magnitudeOfCamera = 0.5f;
+                    magnitudeOfCamera = 0.4f;
                     break;
             }
         }

@@ -41,6 +41,8 @@ namespace WeaponSpace
         private void Start()
         {
             SetAmmoValues();
+            SetSpeedValue();
+
             SetAmmoIndicators();
             ReloadAmmoIndicator();
         }
@@ -49,6 +51,8 @@ namespace WeaponSpace
         {
             SetAmmoIndicators();
             ReloadAmmoIndicator();
+
+            cameraShakeManager.SetMagnitude(nameof(LaserGun));
         }
 
         private void SetAmmoReferences() => uiAmmo.SetReferences();
@@ -63,14 +67,12 @@ namespace WeaponSpace
             maxAmmo = ammo;
             mag = laserGunData.mag;
 
-            cameraShakeManager.SetMagnitude(nameof(LaserGun));
-
             bulletDestroy.DestroyTime = laserGunData.destroyTime;
         }
 
-        protected override void SetSpeedValue() => shootSpeed = laserGunData.shootSpeed;
+        protected override void SetSpeedValue() => fireSpeed = laserGunData.shootSpeed;
 
-        protected override void SetAmmoIndicators() => uiAmmo.SetAmmo(ammo, maxAmmo);
+        protected override void SetAmmoIndicators() => uiAmmo.SetAmmo(ammo, maxAmmo, Color.red);
 
         protected override void ReloadAmmoIndicator() => uiAmmo.ReloadAmmoIndicator(mag, ammo, maxAmmo);
 
@@ -86,7 +88,8 @@ namespace WeaponSpace
                 ReloadAmmoIndicator();
 
                 GameObject bullet = PhotonNetwork.Instantiate(nameof(Bullet), firePoint.position, firePoint.rotation);
-                bulletRB.velocity = bullet.transform.forward * shootSpeed;
+                bullet.GetComponent<Bullet.Bullet>().SetNewWeapon(this);
+                bulletRB.velocity = bullet.transform.forward * fireSpeed;
 
                 cameraShakeManager.ShakeCamera();
 

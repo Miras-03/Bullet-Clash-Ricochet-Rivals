@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UISpace
@@ -27,10 +28,11 @@ namespace UISpace
             magText = ammoTextSingleton.GetMagQuantityInText;
         }
 
-        public void SetAmmo(float ammoCount, int maxAmmoCount)
+        public void SetAmmo(float ammoCount, int maxAmmoCount, Color color)
         {
             float fillAmount = ammoCount / maxAmmoCount;
             ammoCircle.fillAmount = fillAmount;
+            ammoCircle.color = color;
         }
 
         public void ReloadAmmoIndicator(int magCount, int ammoCount, int ammoMaxCount)

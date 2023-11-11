@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using WeaponSpace;
+using Zenject;
 
 public sealed class PlayerInput
 {
@@ -9,7 +11,7 @@ public sealed class PlayerInput
     private const float perLaserFire = 0.5f;
     private const float perMachineFire = 0.1f;
 
-    private static bool isLaserGun = false;
+    private bool isLaserGun = false;
     private bool canFire = true;
 
     private const string FireButton = "Fire1";
@@ -44,7 +46,6 @@ public sealed class PlayerInput
 
     private bool IsReloading() => weapon.IsReloading;
 
-    public void ChangeFireExpect() => isLaserGun = !isLaserGun;
-
     public Weapon Weapon { set => weapon = value; }
+    public bool IsLaserGun { get => isLaserGun; set => isLaserGun = value; }
 }

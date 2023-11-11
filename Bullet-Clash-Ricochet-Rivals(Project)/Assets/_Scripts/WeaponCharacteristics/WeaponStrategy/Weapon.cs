@@ -9,7 +9,7 @@ namespace WeaponSpace
         protected int mag;
         protected int spareAmmo;
         protected int maxAmmo;
-        protected int shootSpeed;
+        protected int fireSpeed;
 
         protected float reloadTime = 3f;
         protected bool isReloading = false;
@@ -26,7 +26,7 @@ namespace WeaponSpace
         protected abstract void SetAmmoIndicators();
         protected abstract void ReloadAmmoIndicator();
 
-        public int ShotSpeed { get => shootSpeed; }
+        public int ShotSpeed { get => fireSpeed; }
         public bool IsReloading { get => isReloading; }
     }
 }

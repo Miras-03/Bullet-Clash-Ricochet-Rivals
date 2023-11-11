@@ -1069,7 +1069,6 @@ MonoBehaviour:
   weapons:
   - {fileID: 1079090479625627831}
   - {fileID: 2148942281331118173}
-  bullet: {fileID: 1914055047366267885, guid: 1fb88933783486d42aa1a069903dd885, type: 3}
 --- !u!114 &2543729075671638406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1126,7 +1125,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6324393617216138637}
   - component: {fileID: 1120030845882006399}
-  - component: {fileID: 3738012333053084573}
   - component: {fileID: 3118146672940382964}
   - component: {fileID: 6381681146435409974}
   - component: {fileID: 2760841951825963040}
@@ -1197,14 +1195,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3738012333053084573
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7993752474498546764}
-  m_Enabled: 1
 --- !u!114 &3118146672940382964
 MonoBehaviour:
   m_ObjectHideFlags: 0
