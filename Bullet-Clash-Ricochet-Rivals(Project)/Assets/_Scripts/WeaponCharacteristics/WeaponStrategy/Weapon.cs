@@ -21,11 +21,6 @@ namespace WeaponSpace
         public abstract void StopReloadCoroutine();
         public abstract void ResetAnimator();
 
-        protected abstract void SetSpeedValue();
-        protected abstract void SetAmmoValues();
-        protected abstract void SetAmmoIndicators();
-        protected abstract void ReloadAmmoIndicator();
-
         public int ShotSpeed { get => fireSpeed; }
         public bool IsReloading { get => isReloading; }
     }

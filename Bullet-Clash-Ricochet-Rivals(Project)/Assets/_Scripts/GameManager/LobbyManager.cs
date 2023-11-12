@@ -25,11 +25,7 @@ public sealed class LobbyManager : MonoBehaviourPunCallbacks
         uiImages = images;
     }
 
-    private void Awake()
-    {
-        PhotonNetwork.AutomaticallySyncScene = true;
-        QuickStart();
-    }
+    private void Awake() => PhotonNetwork.AutomaticallySyncScene = true; 
 
     public void QuickStart()
     {

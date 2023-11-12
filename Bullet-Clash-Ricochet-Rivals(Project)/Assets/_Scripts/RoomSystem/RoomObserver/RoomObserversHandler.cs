@@ -1,7 +1,7 @@
-using HealthSpace;
 using System;
 using UISpace;
 using Zenject;
+using HealthSpace;
 
 namespace RoomSpace
 {
@@ -9,21 +9,25 @@ namespace RoomSpace
     {
         private Room room;
         private HealthManager healthManager;
-        private UIRoomObserver uiRoomObservers;
+        private UIRoomObserver uiRoomObserver;
         private RoomEnvironment roomEnvironment;
 
         [Inject]
         public void Constructor(
             Room room, RoomEnvironment roomEnvironment,
-            HealthManager healthManager, UIRoomObserver uiRoomObservers) {
+            HealthManager healthManager) {
 
             this.room = room;
             this.roomEnvironment = roomEnvironment;
             this.healthManager = healthManager;
-            this.uiRoomObservers = uiRoomObservers;
         }
 
-        public void Initialize() => GameManager.OnGameStarted += GetObservers;
+        public void Initialize()
+        {
+            uiRoomObserver = new UIRoomObserver();
+            GameManager.OnGameStarted += GetObservers;
+        }
+
         public void Dispose() => GameManager.OnGameStarted -= GetObservers;
 
         private void GetObservers()
@@ -35,7 +39,7 @@ namespace RoomSpace
         private void AddObservers()
         {
             room.AddObserver(healthManager);
-            room.AddObserver(uiRoomObservers);
+            room.AddObserver(uiRoomObserver);
             room.AddObserver(roomEnvironment);
         }
     }

@@ -45,19 +45,21 @@ namespace WeaponSpace
 
             SetAmmoIndicators();
             ReloadAmmoIndicator();
+            SetAmmoColor();
         }
 
         private void OnEnable()
         {
             SetAmmoIndicators();
             ReloadAmmoIndicator();
+            SetAmmoColor();
 
             cameraShakeManager.SetMagnitude(nameof(LaserGun));
         }
 
         private void SetAmmoReferences() => uiAmmo.SetReferences();
 
-        protected override void SetAmmoValues()
+        private void SetAmmoValues()
         {
             bulletPrefab = laserGunData.bulletPrefab;
             bulletRB = laserGunData.bulletRB;
@@ -70,11 +72,13 @@ namespace WeaponSpace
             bulletDestroy.DestroyTime = laserGunData.destroyTime;
         }
 
-        protected override void SetSpeedValue() => fireSpeed = laserGunData.shootSpeed;
+        private void SetSpeedValue() => fireSpeed = laserGunData.shootSpeed;
 
-        protected override void SetAmmoIndicators() => uiAmmo.SetAmmo(ammo, maxAmmo, Color.red);
+        private void SetAmmoIndicators() => uiAmmo.SetAmmoCount(ammo, maxAmmo);
 
-        protected override void ReloadAmmoIndicator() => uiAmmo.ReloadAmmoIndicator(mag, ammo, maxAmmo);
+        private void ReloadAmmoIndicator() => uiAmmo.ReloadAmmoIndicator(mag, ammo, maxAmmo);
+
+        private void SetAmmoColor() => uiAmmo.SetAmmoCircleColor(Color.red);
 
         public override void FireAndShake()
         {

@@ -6,8 +6,8 @@ namespace UISpace
 {
     public sealed class UIAmmo
     {
-        private AmmoCircleSingleton ammoCircleSingleton;
-        private AmmoTextSingleton ammoTextSingleton;
+        private ImageSingleton ammoCircleSingleton;
+        private TextMeshProSingleton ammoTextSingleton;
 
         private Image ammoCircle;
 
@@ -16,23 +16,22 @@ namespace UISpace
 
         public UIAmmo()
         {
-            ammoCircleSingleton = AmmoCircleSingleton.Instance;
-            ammoTextSingleton = AmmoTextSingleton.Instance;
+            ammoCircleSingleton = ImageSingleton.Instance;
+            ammoTextSingleton = TextMeshProSingleton.Instance;
         }
 
         public void SetReferences()
         {
-            ammoCircle = ammoCircleSingleton.GetAmmoQuantity;
+            ammoCircle = ammoCircleSingleton.AmmoAmountInCircle;
 
-            ammoText = ammoTextSingleton.GetAmmoQuantityInText;
-            magText = ammoTextSingleton.GetMagQuantityInText;
+            ammoText = ammoTextSingleton.AmmoQuantityInText;
+            magText = ammoTextSingleton.MagQuantityInText;
         }
 
-        public void SetAmmo(float ammoCount, int maxAmmoCount, Color color)
+        public void SetAmmoCount(float ammoCount, int maxAmmoCount)
         {
             float fillAmount = ammoCount / maxAmmoCount;
             ammoCircle.fillAmount = fillAmount;
-            ammoCircle.color = color;
         }
 
         public void ReloadAmmoIndicator(int magCount, int ammoCount, int ammoMaxCount)
@@ -40,5 +39,7 @@ namespace UISpace
             magText.text = magCount.ToString();
             ammoText.text = $"{ammoCount}/{ammoMaxCount}";
         }
+
+        public void SetAmmoCircleColor(Color color) => ammoCircle.color = color;
     }
 }

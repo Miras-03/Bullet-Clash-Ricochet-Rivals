@@ -1,33 +1,38 @@
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-
 namespace UISpace
 {
-    public sealed class UIRoomObserver : MonoBehaviour, IRoomObserver
+    public sealed class UIRoomObserver : IRoomObserver
     {
-        [Header("UI Images")]
-        [SerializeField] private Image[] uiImages;
+        private ImageSingleton imageSingleton;
+        private TextMeshProSingleton textMeshProSingleton;
+        private Crosshair crosshair;
 
-        [Header("UI Texts")]
-        [SerializeField] private TextMeshProUGUI[] texts;
+        public UIRoomObserver()
+        {
+            imageSingleton = ImageSingleton.Instance;
+            textMeshProSingleton = TextMeshProSingleton.Instance;
+            crosshair = Crosshair.Instance;
+        }
 
         public void Execute()
         {
-            EnableImages(uiImages);
+            EnableImages();
             EnableTexts();
         }
 
-        private void EnableImages(Image[] images)
+        private void EnableImages()
         {
-            foreach (Image image in images)
-                image.enabled = true;
+            imageSingleton.HealthAmount.enabled = true;
+            imageSingleton.HealthBG.enabled = true;
+            imageSingleton.AmmoAmountInCircle.enabled = true;
+            imageSingleton.AmmoBGInCircle.enabled = true;
+
+            crosshair.DisableCrosshairs();
         }
 
         private void EnableTexts()
         {
-            foreach (TextMeshProUGUI text in texts)
-                text.enabled = true;
+            textMeshProSingleton.AmmoQuantityInText.enabled = true;
+            textMeshProSingleton.MagQuantityInText.enabled = true;
         }
     }
 }

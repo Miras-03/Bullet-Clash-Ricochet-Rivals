@@ -8,14 +8,12 @@ namespace WeaponSpace
 {
     public sealed class WeaponSwitcher : MonoBehaviour
     {
-        public static Action<Weapon> OnSwitchWeapon;
-
-        [Header("OtherScripts")]
-        private PhotonView playerPhotonView;
-
-        [Space(20)]
         [Header("Weapons types")]
         [SerializeField] private List<Weapon> weapons;
+
+        private PhotonView playerPhotonView;
+
+        public static Action<Weapon> OnSwitchWeapon;
 
         private int currentWeaponIndex = 0;
 
@@ -28,7 +26,7 @@ namespace WeaponSpace
             OnSwitchWeapon.Invoke(weapons[currentWeaponIndex]);
 
             AudioSounder.SoundAudio(SoundSingleton.Instance.GetUnlockSound);
-            ImageSingleton.Instance.SetCrosshair();
+            Crosshair.Instance.SwitchCrosshair();
         }
 
         private void ResetReload()
